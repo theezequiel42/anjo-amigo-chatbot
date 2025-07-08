@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anjo Amigo - Combate à Violência Doméstica</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fce4ec; /* Light Pink */
+        }
+        .chat-container {
+            max-width: 800px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            border-radius: 1.5rem; /* Rounded corners */
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+        }
+        .chat-header {
+            background-color: #d81b60; /* Dark Pink */
+            color: #ffffff;
+            padding: 1.5rem;
+            border-top-left-radius: 1.5rem;
+            border-top-right-radius: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            background-color: #f8fafc; /* Very light gray/blue */
+            display: flex;
+            flex-direction: column;
+        }
+        .message-bubble {
+            max-width: 70%;
+            padding: 0.8rem 1.2rem;
+            border-radius: 1.2rem;
+            margin-bottom: 1rem;
+            word-wrap: break-word;
+            opacity: 0; /* Start hidden */
+            transform: translateY(20px); /* Start slightly below */
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out; /* Smooth transition */
+        }
+        .message-bubble.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .user-message {
+            background-color: #f06292; /* Medium Pink */
+            color: #ffffff;
+            align-self: flex-end;
+            margin-left: auto;
+            border-bottom-right-radius: 0.4rem;
+        }
+        .bot-message {
+            background-color: #9c27b0; /* Purple */
+            color: #ffffff;
+            align-self: flex-start;
+            margin-right: auto;
+            border-bottom-left-radius: 0.4rem;
+        }
+        .chat-input-area {
+            background-color: #ffffff;
+            padding: 1.5rem;
+            border-bottom-left-radius: 1.5rem;
+            border-bottom-right-radius: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .chat-input {
+            flex-grow: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 9999px; /* Fully rounded */
+            outline: none;
+            font-size: 1rem;
+            color: #333;
+        }
+        .send-button {
+            background-color: #d81b60; /* Dark Pink */
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px; /* Fully rounded */
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .send-button:hover {
+            background-color: #ad1457; /* Darker Pink */
+        }
+        .loading-indicator {
+            display: none;
+            color: #9c27b0; /* Purple */
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+        /* Icon styling */
+        .icon {
+            width: 48px;
+            height: 48px;
+            background-color: #f48fb1; /* Light Pink */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+    <div class="chat-container">
+        <!-- Chat Header -->
+        <div class="chat-header">
+            <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bot"><path d="M12 8V4H8"/><path d="M22 7.2L2 15"/><path d="M10 2v20"/><path d="M14 2v20"/><path d="M16 4h4v4"/><path d="M18 19l-2-2"/></svg>
+            </div>
+            <h1 class="text-2xl font-bold">Anjo Amigo - Chatbot</h1>
+        </div>
+
+        <!-- Chat Messages Display -->
+        <div id="chat-messages" class="chat-messages">
+            <!-- Messages will be appended here -->
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loading-indicator" class="loading-indicator">Digitando...</div>
+
+        <!-- Chat Input Area -->
+        <div class="chat-input-area">
+            <input type="text" id="user-input" class="chat-input" placeholder="Digite sua mensagem...">
+            <button id="send-button" class="send-button">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const loadingIndicator = document.getElementById('loading-indicator');
+
+        // Function to display a message in the chat with animation
+        function displayMessage(text, sender) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message-bubble', sender === 'user' ? 'user-message' : 'bot-message');
+            // Convert Markdown bold (**text**) to HTML strong (<strong>text</strong>)
+            const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            messageElement.innerHTML = formattedText; // Use innerHTML to render HTML tags
+            chatMessages.appendChild(messageElement); // Append new messages at the bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+
+            // Trigger animation
+            setTimeout(() => {
+                messageElement.classList.add('show');
+            }, 10); // Small delay to ensure CSS transition applies
+        }
+
+        // Function to display multiple messages one by one
+        async function displayMultipleMessages(messages, sender, delay = 500) {
+            for (const msg of messages) {
+                displayMessage(msg, sender);
+                await new Promise(resolve => setTimeout(resolve, delay));
+            }
+        }
+
+        // Welcome messages (split into multiple bubbles)
+        window.onload = () => {
+            displayMultipleMessages([
+                "Olá! Sou o **Anjo Amigo**, seu chatbot de apoio contra a violência doméstica em Fraiburgo.",
+                "Posso te ajudar com informações sobre **leis**, seus direitos, tipos de violência e a rede de proteção.",
+                "Como posso te ajudar hoje?"
+            ], 'bot');
+        };
+
+        // Knowledge base from the PDF document (adjusted for single bold per message)
+        const knowledgeBase = {
+            "violência física": ["A violência física envolve **agressões corporais**.", "Em emergências, ligue 190 (Polícia Militar)."],
+            "violência psicológica": ["A violência psicológica causa **dano emocional**.", "O CREAS (49 3246-2826) oferece apoio."],
+            "violência sexual": ["É qualquer ato sexual **não desejado**.", "Para ajuda, contate a Vigilância Epidemiológica (49 3256-4043)."],
+            "violência patrimonial": ["É a **subtração ou destruição de bens**.", "A Secretaria de Assistência Social (49 3908-2025) pode auxiliar."],
+            "violência moral": ["Inclui **calúnia, difamação ou injúria**.", "A OAB por Elas (49 3246-2090) oferece ajuda jurídica."],
+            "rede protetiva": ["A **Rede Protetiva em Fraiburgo** tem vários órgãos, como CREAS, CRAS e Polícias."],
+            "como denunciar": ["Para denunciar, ligue **190 (Polícia Militar)**.", "Você também pode registrar um B.O. na Polícia Civil - Sala Lilás."],
+            "lei maria da penha": ["A **Lei Maria da Penha** (Lei nº 11.340/2006) protege vítimas e responsabiliza agressores."],
+            "creas": ["O **CREAS (49 3246-2826)** oferece atendimento psicossocial e encaminha para benefícios."],
+            "cras": ["O **CRAS (49 3256-3069)** previne riscos e fortalece vínculos familiares."],
+            "secretaria municipal de assistência social": ["A **Secretaria Municipal de Assistência Social (49 3908-2025)** gerencia a assistência social e oferece benefícios."],
+            "secretaria municipal de educação": ["A **Secretaria Municipal de Educação (49 3256-4250)** acolhe crianças/adolescentes vítimas e faz campanhas."],
+            "conselho municipal dos direitos da mulher": ["O **CMDM (49 3908-2025)** garante controle social e participação popular para direitos das mulheres."],
+            "procuradoria especial da mulher": ["A **Procuradoria Especial da Mulher (49 3246-2764)** defende a igualdade e recebe denúncias."],
+            "secretaria de saúde - unidades de saúde": ["As **Unidades de Saúde (49 3256-4000)** acolhem vítimas e comunicam a polícia."],
+            "hospital fraiburgo": ["O **Hospital Fraiburgo (49 3246-1012)** oferece atendimento humanizado e avaliação psicossocial."],
+            "samu": ["O **SAMU (192)** presta socorro emergencial.", "Ligue em caso de urgência."],
+            "vigilância epidemiológica": ["A **Vigilância Epidemiológica (49 3256-4043)** atende vítimas de violência sexual e monitora dados."],
+            "polícia civil - sala lilás": ["A **Polícia Civil - Sala Lilás (49 3533-5456)** investiga crimes, registra B.O. e medidas protetivas."],
+            "polícia militar - rede catarina": ["A **Polícia Militar (190)** tem a Rede Catarina para prevenção.", "Oferece visitas e o 'botão do pânico'."],
+            "corpo de bombeiros": ["O **Corpo de Bombeiros (193)** presta socorro de emergência.", "Ligue em caso de urgência."],
+            "ministério público": ["O **Ministério Público (49 99188-2795)** atua na defesa jurídica e ações penais."],
+            "poder judiciário": ["O **Poder Judiciário (49 3521-8216)** garante direitos, julga casos e defere medidas protetivas."],
+            "oab por elas": ["A **OAB por Elas (49 3246-2090)** oferece assistência jurídica gratuita."],
+            "objetivos gerais": ["O objetivo do **Anjo Amigo** é apresentar a Rede de Proteção à Mulher em Fraiburgo."],
+            "objetivos específicos": ["Nossos objetivos incluem organizar a rede, qualificar o suporte e promover a conscientização."],
+            "apoio psicossocial": ["Você pode buscar **apoio psicossocial** no CREAS (49 3246-2826) ou CRAS (49 3256-3069)."],
+            "emergência": ["Em **emergência**, ligue imediatamente para 190, 192 ou 193."],
+            "botão do pânico": ["O **'botão do pânico'** está no app PMSC Cidadão para mulheres com medidas protetivas."]
+        };
+
+        async function sendMessage() {
+            const userText = userInput.value.trim();
+            if (userText === "") return;
+
+            displayMessage(userText, 'user');
+            userInput.value = '';
+            loadingIndicator.style.display = 'block';
+            
+
+            // Check knowledge base first
+            const normalizedQuery = userText.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Remove accents for better matching
+
+            let botResponseMessages = []; // To store multiple messages
+
+            let foundInKB = false;
+            for (const key in knowledgeBase) {
+                if (normalizedQuery.includes(key.normalize("NFD").replace(/[\u0300-\u036f]/g, ""))) {
+                    botResponseMessages = knowledgeBase[key]; // Assign array of messages from KB
+                    foundInKB = true;
+                    break;
+                }
+            }
+
+            if (foundInKB) {
+                await displayMultipleMessages(botResponseMessages, 'bot');
+                loadingIndicator.style.display = 'none';
+                return;
+            }
+
+            // Se não encontrou na base, chama a API local (FastAPI backend)
+            try {
+                const apiUrl = "http://82.29.61.210:8000/api/send";
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: userText })
+                });
+
+                const result = await response.json();
+
+                if (result.messages && Array.isArray(result.messages)) {
+                    await displayMultipleMessages(result.messages, 'bot');
+                } else {
+                    displayMessage("Desculpe, recebi uma resposta inesperada. Por favor, tente novamente.", 'bot');
+                }
+            } catch (error) {
+                console.error("Erro ao chamar o backend Anjo Amigo:", error);
+                displayMessage("Ocorreu um erro ao tentar me conectar. Por favor, tente novamente mais tarde.", 'bot');
+            } finally {
+                loadingIndicator.style.display = 'none';
+            }
+        }
+
+        sendButton.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
