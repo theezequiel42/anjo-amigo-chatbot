@@ -1,107 +1,107 @@
 # Anjo Amigo - AI-Powered Domestic Violence Support Chatbot for Fraiburgo
 
-Anjo Amigo is a specialized chatbot designed to provide immediate, accessible information about domestic violence resources and support services in Fraiburgo, Brazil. 
-The system combines a local knowledge base with AI-powered responses to deliver accurate, context-aware information about violence prevention, legal rights, and available support networks.
+Anjo Amigo is a specialized chatbot designed to provide immediate support and information about domestic violence resources in Fraiburgo, Brazil. The application offers an accessible, user-friendly interface that connects users with local support services, legal information, and emergency contacts while maintaining privacy and providing real-time assistance.
 
-The chatbot serves as a digital gateway to Fraiburgo's Women's Protection Network, offering information about different types of domestic violence, emergency contacts, and local support services. 
-It features a user-friendly interface that provides real-time responses through an intuitive chat interface, making critical information accessible to those who need it most.
+The chatbot combines a local knowledge base with AI-powered responses through the Gemini API to deliver accurate, context-aware information about domestic violence support services. Key features include text-to-speech capabilities, voice input support, multilingual accessibility, and real-time responses covering topics from emergency contacts to legal rights under the Maria da Penha Law. The system integrates with local support networks including CREAS, CRAS, law enforcement, and healthcare providers to ensure comprehensive assistance.
 
 ## Repository Structure
 ```
 .
-├── index.html          # Frontend interface with chat UI and client-side logic
-└── main.py            # FastAPI backend server with knowledge base and Gemini AI integration
+├── index.html          # Main HTML interface with chat UI components
+├── knowledgeBase.js    # Local database of support services and violence types
+├── main.js            # Core JavaScript for chat functionality and UI interactions
+├── main.py            # FastAPI backend with Gemini API integration
+└── styles.css         # CSS styling for chat interface and animations
 ```
 
 ## Usage Instructions
 ### Prerequisites
-- Python 3.7+
-- FastAPI
-- Python-dotenv
-- Requests library
-- Web browser with JavaScript enabled
-- Gemini API key
+- Python 3.7+ for backend server
+- Modern web browser with JavaScript enabled
+- Internet connection for API access
+- Gemini API key (for backend services)
 
 ### Installation
 
-1. Clone the repository:
+#### Backend Setup
 ```bash
-git clone [repository-url]
-cd anjo-amigo
-```
-
-2. Install Python dependencies:
-```bash
+# Install Python dependencies
 pip install fastapi uvicorn python-dotenv requests
+
+# Set up environment variables
+echo "GEMINI_API_KEY=your_api_key_here" > .env
+
+# Start the backend server
+uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
-3. Create a `.env` file in the root directory:
+#### Frontend Setup
 ```bash
-GEMINI_API_KEY=your_api_key_here
+# Serve the frontend files using any HTTP server
+# Example using Python's built-in server:
+python -m http.server 8080
 ```
 
 ### Quick Start
-
-1. Start the FastAPI server:
-```bash
-uvicorn main:app --reload
-```
-
-2. Open `index.html` in a web browser
-
-3. Begin interacting with the chatbot by typing questions about domestic violence resources in Fraiburgo
+1. Access the application through your web browser at `http://localhost:8080`
+2. The chatbot will display welcome messages explaining available services
+3. Type your question or use the voice input button to interact
+4. Receive immediate responses with relevant information and local resources
 
 ### More Detailed Examples
 
-1. Asking about types of violence:
-```
-User: "What is physical violence?"
-Bot: "Physical violence involves bodily aggression.
-     In emergencies, call 190 (Military Police)."
+#### Text Input Example
+```javascript
+// Ask about domestic violence types
+User: "What are the types of domestic violence?"
+Bot: [
+    "There are several types of domestic violence:",
+    "**Physical violence** includes bodily harm",
+    "**Psychological violence** involves emotional damage",
+    "**Sexual violence** covers unwanted sexual acts",
+    "**Patrimonial violence** involves property damage or theft",
+    "**Moral violence** includes defamation and slander"
+]
 ```
 
-2. Getting emergency contacts:
-```
-User: "How can I report domestic violence?"
-Bot: "To report, call 190 (Military Police).
-     You can also file a police report at the Civil Police - Sala Lilás."
-```
+#### Voice Input Usage
+1. Click the microphone icon
+2. Speak your question clearly
+3. The system will automatically transcribe and process your query
+4. Receive both text and voice responses
 
 ### Troubleshooting
 
-Common Issues:
-1. API Key Not Found
-   - Error: "Gemini API key not found"
-   - Solution: Ensure `.env` file exists with valid `GEMINI_API_KEY`
+#### Common Issues
+1. Backend Connection Errors
+   - Error: "Unable to connect to backend"
+   - Solution: Verify the backend server is running and check CORS settings
+   - Debug: Check console logs for specific error messages
 
-2. CORS Issues
-   - Error: Cross-Origin Request Blocked
-   - Solution: Check CORS middleware configuration in main.py
+2. Voice Recognition Issues
+   - Error: "Speech recognition not supported"
+   - Solution: Use a supported browser (Chrome, Edge, Safari)
+   - Check microphone permissions in browser settings
 
-3. Server Connection Issues
-   - Error: Cannot connect to server
-   - Solution: Verify uvicorn is running and port is available
+3. API Response Failures
+   - Error: "Unexpected response from API"
+   - Solution: Verify Gemini API key and quota
+   - Check network connectivity and API status
 
 ## Data Flow
-The chatbot processes user queries through a two-stage response system, first checking a local knowledge base before falling back to AI-generated responses.
+The Anjo Amigo chatbot processes user queries through a multi-stage pipeline, combining local knowledge base lookups with AI-powered responses for comprehensive support.
 
 ```ascii
-User Input -> [Frontend] -> HTTP Request -> [Backend] 
-                                             |
-                                      Check Local KB
-                                             |
-                                     [If not found]
-                                             |
-                                      Query Gemini AI
-                                             |
-                           JSON Response -> [Frontend] -> Display
+User Input → Local KB Check → [Match Found] → Direct Response
+                           → [No Match] → Gemini API → AI Response
+                                      → Text-to-Speech Output
 ```
 
 Key Component Interactions:
-1. Frontend sends user messages to backend via POST /api/send
-2. Backend first checks local knowledge base for matches
-3. If no match found, query is processed by Gemini AI
-4. Responses are formatted as JSON arrays of strings
-5. Frontend displays messages with animation effects
-6. Messages support Markdown-style bold text formatting
-7. System maintains conversation context and flow
+- Frontend captures user input via text or voice
+- Local knowledge base provides immediate responses for known topics
+- FastAPI backend processes complex queries through Gemini API
+- Text-to-speech engine converts responses for accessibility
+- Response formatting adds markdown emphasis for important information
+- Error handling ensures graceful fallbacks at each step
+- Real-time updates maintain conversation flow
