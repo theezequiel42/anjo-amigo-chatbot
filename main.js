@@ -7,7 +7,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const loadingIndicator = document.getElementById('loading-indicator');
 
   /* ---------- controle global ---------- */
-  let isVoiceMuted = false;       // saída de voz ligada por padrão
+  let isVoiceMuted = true;       // saída de voz desligada por padrão
 
   /* ---------- utilidades ---------- */
   function speak(text) {

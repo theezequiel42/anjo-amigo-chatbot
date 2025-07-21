@@ -4,45 +4,46 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Chatbot Anjo Amigo – apoio à mulher em situação de violência doméstica. Saiba seus direitos e onde buscar ajuda em Fraiburgo." />
+
   <title>Anjo Amigo - Combate à Violência Doméstica</title>
+
+  <!-- SEO: Tags Open Graph -->
+  <meta property="og:title" content="Anjo Amigo – Combate à Violência Doméstica">
+  <meta property="og:description" content="Chatbot de apoio à mulher em situação de violência doméstica em Fraiburgo. Saiba seus direitos e onde buscar ajuda.">
+  <meta property="og:type" content="website">
+
+  <!-- Fonte Inter otimizada -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS (CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Fonte Inter -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 
   <!-- Estilos personalizados -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="flex items-center justify-center min-h-screen">
   <div class="chat-container">
-    
+
     <!-- Cabeçalho do Chat -->
     <header class="chat-header">
-      <div class="icon" aria-hidden="true">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-             stroke-linejoin="round" class="lucide lucide-bot">
-          <path d="M12 8V4H8"></path>
-          <path d="M22 7.2L2 15"></path>
-          <path d="M10 2v20"></path>
-          <path d="M14 2v20"></path>
-          <path d="M16 4h4v4"></path>
-          <path d="M18 19l-2-2"></path>
-        </svg>
-      </div>
+      <div class="icon" aria-hidden="true"></div>
       <h1 class="text-2xl font-bold">Anjo Amigo - Chatbot</h1>
     </header>
 
     <!-- Área de mensagens -->
     <main id="chat-messages" class="chat-messages" aria-live="polite" role="log">
+      <span class="sr-only">Área de mensagens do chatbot Anjo Amigo. As respostas aparecerão aqui.</span>
       <!-- Mensagens aparecerão aqui -->
     </main>
 
-    <!-- Indicador de carregamento -->
-    <div id="loading-indicator" class="loading-indicator" role="status" aria-hidden="true">
-    <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+    <!-- Indicador de carregamento acessível -->
+    <div id="loading-indicator" class="loading-indicator" role="status">
+      <span class="sr-only">Carregando...</span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
     </div>
 
     <!-- Área de entrada de texto -->
@@ -54,7 +55,19 @@
 
   </div>
 
-  <!-- Scripts -->
+  <!-- Ícones Lucide (corrigido CDN tradicional) -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const iconContainer = document.querySelector('.icon');
+      const icon = lucide.createElement(lucide.icons.MessageCircle);
+      icon.classList.add('w-6', 'h-6');
+      iconContainer.appendChild(icon);
+    });
+  </script>
+
+  <!-- Scripts externos -->
   <script src="knowledgeBase.js" defer></script>
   <script src="main.js" defer></script>
 </body>
