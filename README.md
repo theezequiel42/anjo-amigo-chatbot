@@ -1,122 +1,128 @@
-# Anjo Amigo - AI-Powered Domestic Violence Support Chatbot for Fraiburgo
+# 🤖 Anjo Amigo - Chatbot de Apoio à Mulher
 
-Anjo Amigo is a specialized chatbot designed to provide immediate support and information about domestic violence resources in Fraiburgo, Brazil. The application offers an accessible, user-friendly interface that connects users with local support services, legal information, and emergency contacts while maintaining privacy and providing real-time assistance.
+Chatbot desenvolvido para apoiar mulheres em situação de violência doméstica na cidade de Fraiburgo, fornecendo informações sobre direitos, recursos disponíveis e orientações sobre onde buscar ajuda.
 
-The chatbot combines a local knowledge base with AI-powered responses through the Gemini API to deliver accurate, context-aware information about domestic violence support services. Key features include text-to-speech capabilities, voice input support, multilingual accessibility, and real-time responses covering topics from emergency contacts to legal rights under the Maria da Penha Law. The system integrates with local support networks including CREAS, CRAS, law enforcement, and healthcare providers to ensure comprehensive assistance.
+## 📋 Sobre o Projeto
 
-## Repository Structure
+O **Anjo Amigo** é uma ferramenta digital que visa oferecer suporte imediato e acessível para mulheres que enfrentam situações de violência doméstica. O chatbot fornece informações relevantes, orientações e direcionamentos para recursos locais de apoio.
+
+## ✨ Funcionalidades
+
+- 💬 Interface de chat intuitiva e acessível
+- 🔍 Base de conhecimento especializada em violência doméstica
+- 🏥 Informações sobre recursos locais em Fraiburgo
+- ⚖️ Orientações sobre direitos da mulher
+- 🆘 Direcionamento para canais de ajuda
+
+## 🛠️ Tecnologias Utilizadas
+
+### Backend
+- **FastAPI** - Framework web moderno e rápido
+- **Python 3.12** - Linguagem de programação
+- **Google Gemini API** - Inteligência artificial para respostas
+- **Uvicorn** - Servidor ASGI
+
+### Frontend
+- **HTML5** - Estrutura da página
+- **CSS3** - Estilização
+- **JavaScript** - Interatividade
+- **Tailwind CSS** - Framework CSS
+- **Lucide Icons** - Ícones
+
+## 📁 Estrutura do Projeto
+
 ```
-.
-├── frontend/
-│ ├── index.html # Main HTML page
-│ ├── styles.css # Interface styles
-│ ├── main.js # Main JS logic of the frontend
-│ ├── knowledgeBase.js # Knowledge base in JS
-│ └── assets/ # Images, icons, fonts, etc.
-│
+anjo-amigo-chatbot/
 ├── backend/
-│ ├── main.py # FastAPI app with Gemini integration
-│ ├── requirements.txt # Python dependencies
-│ ├── knowledge/ # Folder for modular knowledge (e.g., .json, .md)
-│ │ └── fraiburgo.json # Example: local city data
-│ └── config.py # General settings (e.g., API key, CORS)
-│
+│   ├── knowledge/          # Base de conhecimento
+│   ├── services/           # Serviços (Gemini API)
+│   ├── utils/              # Utilitários
+│   ├── config.py           # Configurações
+│   ├── main.py             # Aplicação principal
+│   ├── models.py           # Modelos de dados
+│   ├── requirements.txt    # Dependências Python
+│   └── routes.py           # Rotas da API
 ├── docker/
-│ ├── Dockerfile # Backend build
-│ └── docker-compose.yml # Orchestration with frontend and backend (future)
-│
-├── README.md # Project Description
-└── LICENSE # Usage License
+│   ├── Dockerfile          # Container Docker
+│   └── .dockerignore       # Arquivos ignorados
+└── frontend/
+    ├── assets/             # Recursos estáticos
+    ├── index.html          # Página principal
+    ├── knowledgeBase.js     # Base de conhecimento JS
+    ├── main.js             # Lógica principal
+    └── styles.css          # Estilos personalizados
 ```
 
-## Usage Instructions
-### Prerequisites
-- Python 3.7+ for backend server
-- Modern web browser with JavaScript enabled
-- Internet connection for API access
-- Gemini API key (for backend services)
+## 🚀 Como Executar
 
-### Installation
+### Pré-requisitos
+- Python 3.12+
+- Chave da API do Google Gemini
 
-#### Backend Setup
+### Configuração
+
+1. **Clone o repositório:**
 ```bash
-# Install Python dependencies
-pip install fastapi uvicorn python-dotenv requests
-
-# Set up environment variables
-echo "GEMINI_API_KEY=your_api_key_here" > .env
-
-# Start the backend server
-uvicorn main:app --host 0.0.0.0 --port 8000
+git clone https://github.com/theezequiel42/anjo-amigo-chatbot
+cd anjo-amigo-chatbot
 ```
 
-#### Frontend Setup
+2. **Configure as variáveis de ambiente:**
 ```bash
-# Serve the frontend files using any HTTP server
-# Example using Python's built-in server:
-python -m http.server 8080
+# Crie um arquivo .env na pasta backend/
+echo "GEMINI_API_KEY=sua_chave_aqui" > backend/.env
 ```
 
-### Quick Start
-1. Access the application through your web browser at `http://localhost:8080`
-2. The chatbot will display welcome messages explaining available services
-3. Type your question or use the voice input button to interact
-4. Receive immediate responses with relevant information and local resources
-
-### More Detailed Examples
-
-#### Text Input Example
-```javascript
-// Ask about domestic violence types
-User: "What are the types of domestic violence?"
-Bot: [
-    "There are several types of domestic violence:",
-    "**Physical violence** includes bodily harm",
-    "**Psychological violence** involves emotional damage",
-    "**Sexual violence** covers unwanted sexual acts",
-    "**Patrimonial violence** involves property damage or theft",
-    "**Moral violence** includes defamation and slander"
-]
+3. **Instale as dependências:**
+```bash
+cd backend
+pip install -r requirements.txt
 ```
 
-#### Voice Input Usage
-1. Click the microphone icon
-2. Speak your question clearly
-3. The system will automatically transcribe and process your query
-4. Receive both text and voice responses
-
-### Troubleshooting
-
-#### Common Issues
-1. Backend Connection Errors
-   - Error: "Unable to connect to backend"
-   - Solution: Verify the backend server is running and check CORS settings
-   - Debug: Check console logs for specific error messages
-
-2. Voice Recognition Issues
-   - Error: "Speech recognition not supported"
-   - Solution: Use a supported browser (Chrome, Edge, Safari)
-   - Check microphone permissions in browser settings
-
-3. API Response Failures
-   - Error: "Unexpected response from API"
-   - Solution: Verify Gemini API key and quota
-   - Check network connectivity and API status
-
-## Data Flow
-The Anjo Amigo chatbot processes user queries through a multi-stage pipeline, combining local knowledge base lookups with AI-powered responses for comprehensive support.
-
-```ascii
-User Input → Local KB Check → [Match Found] → Direct Response
-                           → [No Match] → Gemini API → AI Response
-                                      → Text-to-Speech Output
+4. **Execute o servidor:**
+```bash
+uvicorn main:app --reload
 ```
 
-Key Component Interactions:
-- Frontend captures user input via text or voice
-- Local knowledge base provides immediate responses for known topics
-- FastAPI backend processes complex queries through Gemini API
-- Text-to-speech engine converts responses for accessibility
-- Response formatting adds markdown emphasis for important information
-- Error handling ensures graceful fallbacks at each step
-- Real-time updates maintain conversation flow
+5. **Acesse a aplicação:**
+   - Backend: http://localhost:8000
+   - Frontend: Abra `frontend/index.html` no navegador
+
+### 🐳 Executar com Docker
+
+```bash
+# Na pasta raiz do projeto
+docker build -f docker/Dockerfile -t anjo-amigo .
+docker run -p 8000:8000 --env-file backend/.env anjo-amigo
+```
+
+## 🔧 Configuração da API
+
+O projeto utiliza a API do Google Gemini. Para configurar:
+
+1. Obtenha uma chave da API no [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Adicione a chave no arquivo `.env`:
+```
+GEMINI_API_KEY=sua_chave_da_api_gemini
+```
+
+## 📱 Como Usar
+
+1. Acesse a interface web
+2. Digite sua pergunta ou situação no campo de texto
+3. O chatbot fornecerá informações relevantes e orientações
+4. Para emergências, sempre procure ajuda imediata (190, 180)
+
+## 📞 Contatos de Emergência
+
+- **Polícia Militar:** 190
+- **Central de Atendimento à Mulher:** 180
+- **Disque Direitos Humanos:** 100
+
+## 📄 Licença
+
+Este projeto está sob a licença [MIT](LICENSE).
+
+## ⚠️ Aviso Importante
+
+Este chatbot é uma ferramenta de apoio e informação. Em situações de emergência, sempre procure ajuda imediata através dos canais oficiais (190, 180) ou dirija-se à delegacia mais próxima.
