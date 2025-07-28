@@ -7,11 +7,26 @@ The chatbot combines a local knowledge base with AI-powered responses through th
 ## Repository Structure
 ```
 .
-├── index.html          # Main HTML interface with chat UI components
-├── knowledgeBase.js    # Local database of support services and violence types
-├── main.js            # Core JavaScript for chat functionality and UI interactions
-├── main.py            # FastAPI backend with Gemini API integration
-└── styles.css         # CSS styling for chat interface and animations
+├── frontend/
+│ ├── index.html # Main HTML page
+│ ├── styles.css # Interface styles
+│ ├── main.js # Main JS logic of the frontend
+│ ├── knowledgeBase.js # Knowledge base in JS
+│ └── assets/ # Images, icons, fonts, etc.
+│
+├── backend/
+│ ├── main.py # FastAPI app with Gemini integration
+│ ├── requirements.txt # Python dependencies
+│ ├── knowledge/ # Folder for modular knowledge (e.g., .json, .md)
+│ │ └── fraiburgo.json # Example: local city data
+│ └── config.py # General settings (e.g., API key, CORS)
+│
+├── docker/
+│ ├── Dockerfile # Backend build
+│ └── docker-compose.yml # Orchestration with frontend and backend (future)
+│
+├── README.md # Project Description
+└── LICENSE # Usage License
 ```
 
 ## Usage Instructions
