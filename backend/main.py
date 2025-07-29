@@ -5,15 +5,20 @@ from routes import router
 
 app = FastAPI()
 
-# CORS
+# Middleware CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Pode ser ajustado
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Carrega configurações e rotas
+# Endpoint de status (raiz)
+@app.get("/")
+async def root():
+    return {"message": "API Anjo Amigo está rodando corretamente!"}
+
+# Configurações e rotas
 load_settings()
 app.include_router(router)

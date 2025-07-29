@@ -1,20 +1,20 @@
 FROM python:3.12-slim
 
+# Define o diretório padrão da aplicação
 WORKDIR /app
 
-# Copia dependências
+# Copia apenas o requirements primeiro (para cache eficiente)
 COPY backend/requirements.txt .
 
-# Instala dependências com segurança (sem cache e com atualizações do sistema)
-RUN apt-get update && apt-get upgrade -y && \
-    pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# Instala pip e dependências
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copia o restante do backend
 COPY backend/ .
 
-# Expõe a porta da API
+# Expondo porta da API
 EXPOSE 8000
 
+# Comando padrão (pode ser sobrescrito no docker-compose.yml)
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

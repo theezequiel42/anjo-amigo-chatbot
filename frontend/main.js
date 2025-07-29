@@ -1,5 +1,11 @@
 /* main.js – Anjo Amigo v4 (voz + mute + ícones dinâmicos) */
 window.addEventListener('DOMContentLoaded', () => {
+
+    // === CONFIGURAÇÃO DO BACKEND ===
+  const config = window.APP_CONFIG || {};
+  const BASE_URL = config.USE_LOCAL_BACKEND ? config.LOCAL_URL : config.PROD_URL;
+  // console.log("Backend ativo:", BASE_URL);
+
   /* ---------- elementos principais ---------- */
   const chatMessages   = document.getElementById('chat-messages');
   const userInput      = document.getElementById('user-input');
@@ -70,7 +76,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     /* fallback → FastAPI */
     try {
-      const resp = await fetch('http://82.29.61.210:8000/api/send', {
+      const resp = await fetch(`${BASE_URL}/api/send`, {
         method : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body   : JSON.stringify({ text: userText })
