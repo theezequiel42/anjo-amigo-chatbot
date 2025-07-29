@@ -171,6 +171,20 @@ window.APP_CONFIG = {
 
 ---
 
+🔀 Rotas da API
+
+POST /api/send – Endpoint principal do chatbot. Envia a pergunta do usuário e retorna uma resposta com base na base de conhecimento local ou na IA (Gemini).
+
+Exemplo:
+
+{
+  "text": "O que é violência psicológica?"
+}
+
+GET /docs – Documentação interativa da API gerada automaticamente pelo FastAPI (Swagger UI). Permite testar as rotas diretamente pelo navegador.
+
+---
+
 ## 📞 Contatos de Emergência
 
 - 📱 **Polícia Militar:** 190
