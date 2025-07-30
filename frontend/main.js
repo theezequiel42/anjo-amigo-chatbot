@@ -17,12 +17,28 @@ window.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- utilidades ---------- */
   function speak(text) {
-    if (isVoiceMuted) return;
+  if (isVoiceMuted || !text || text.length < 5) return;
+  const synth = window.speechSynthesis;
+  // Tenta prevenir sobreposição, mas com um pequeno delay
+  synth.cancel();
+  const trySpeak = () => {
+    if (!synth || synth.speaking) {
+      // Espera até que o mecanismo esteja pronto
+      setTimeout(trySpeak, 200);
+      return;
+    }
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'pt-BR';
-    window.speechSynthesis.cancel();        // evita sobreposição
-    window.speechSynthesis.speak(utter);
-  }
+    // 🔁 Retentativa se falhar silenciosamente
+    utter.onerror = (e) => {
+      console.warn("Erro ao tentar falar:", e);
+      setTimeout(() => synth.speak(utter), 300); // retenta
+    };
+    synth.speak(utter);
+  };
+  trySpeak();
+}
+
 
   function displayMessage(text, sender) {
     const el = document.createElement('div');
