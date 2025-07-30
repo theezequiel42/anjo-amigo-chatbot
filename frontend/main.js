@@ -4,7 +4,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // === CONFIGURAÇÃO DO BACKEND ===
   const config = window.APP_CONFIG || {};
   const BASE_URL = config.USE_LOCAL_BACKEND ? config.LOCAL_URL : config.PROD_URL;
-  // console.log("Backend ativo:", BASE_URL);
+  // console.log("Backend ativo:", BASE_URL); // descomente para verificar o backend ativo
 
   /* ---------- elementos principais ---------- */
   const chatMessages   = document.getElementById('chat-messages');
