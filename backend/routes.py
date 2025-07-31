@@ -6,7 +6,7 @@ from services.gemini import generate_response_with_gemini
 
 router = APIRouter()
 
-@router.post("/api/send")
+@router.post("/send")
 async def send_message(msg: Message):
     user_input = normalize(msg.text)
 
